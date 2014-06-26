@@ -24,6 +24,42 @@ class ToyRobot
 
   end
 
+  def move
+    position = @position
+    movement = nil
+
+    case @direction
+    when :north
+      movement = { x: 0, y: 1}
+    when :east
+      movement = { x: 1, y: 0}
+    when :south
+      movement = { x: 0, y: -1}
+    when :west
+      movement = { x: -1, y: 0}
+    end
+
+    moved = true
+
+    if valid_position?(position[:x] + movement[:x], position[:y] + movement[:y])
+      @position = { x: position[:x] + movement[:x], y: position[:y] + movement[:y] }
+    else
+      moved = false
+    end
+
+    moved
+  end
+
+  def rotate_left
+    index = DIRECTIONS.index(@direction)
+    @direction = DIRECTIONS.rotate(-1)[index]
+  end
+
+  def rotate_right
+    index = DIRECTIONS.index(@direction)
+    @direction = DIRECTIONS.rotate()[index]
+  end
+
   private
 
   def valid_position?(x, y)
