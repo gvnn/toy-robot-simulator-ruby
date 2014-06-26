@@ -1,4 +1,3 @@
-
 class ToyRobot
   attr_reader :position, :direction, :board
 
@@ -11,6 +10,9 @@ class ToyRobot
     @board = board
   end
 
+  ##
+  # Places the robot on the board  in position X,Y and facing NORTH, SOUTH, EAST or WEST
+  #
   def place(x, y, direction)
     raise TypeError, 'Invalid coordinates' unless x.is_a? Integer and y.is_a? Integer
     raise TypeError, 'Invalid direction' unless DIRECTIONS.include?(direction)
@@ -25,6 +27,9 @@ class ToyRobot
 
   end
 
+  ##
+  # Moves the robot one unit forward in the direction it is currently facing
+  #
   def move
     return false if @position.nil?
 
@@ -53,6 +58,9 @@ class ToyRobot
     moved
   end
 
+  ##
+  # Rotates the robot 90 degrees LEFT
+  #
   def rotate_left
     return false if @direction.nil?
 
@@ -61,6 +69,9 @@ class ToyRobot
     true
   end
 
+  ##
+  # Rotates the robot 90 degrees RIGHT
+  #
   def rotate_right
     return false if @direction.nil?
 
@@ -69,12 +80,18 @@ class ToyRobot
     true
   end
 
+  ##
+  # Returns the X,Y and Direction of the robot
+  #
   def report
     return "Not on board" if @position.nil? or @direction.nil?
 
     "#{@position[:x]},#{@position[:y]},#{@direction.to_s.upcase}"
   end
 
+  ##
+  # Evals and executes a string command.
+  #
   def eval(input)
     return if input.strip.empty?
 
