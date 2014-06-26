@@ -3,6 +3,7 @@ class ToyRobot
   attr_reader :position, :direction, :board
 
   DIRECTIONS = [:north, :east, :south, :west]
+  COMMANDS = [:place, :move, :left, :right, :report]
 
   def initialize(board)
     raise TypeError, 'Invalid board' if board.nil?
@@ -25,6 +26,8 @@ class ToyRobot
   end
 
   def move
+    return false if @position.nil?
+
     position = @position
     movement = nil
 
@@ -51,13 +54,61 @@ class ToyRobot
   end
 
   def rotate_left
+    return false if @direction.nil?
+
     index = DIRECTIONS.index(@direction)
     @direction = DIRECTIONS.rotate(-1)[index]
+    true
   end
 
   def rotate_right
+    return false if @direction.nil?
+
     index = DIRECTIONS.index(@direction)
     @direction = DIRECTIONS.rotate()[index]
+    true
+  end
+
+  def report
+    return "Not on board" if @position.nil? or @direction.nil?
+
+    "#{@position[:x]},#{@position[:y]},#{@direction.to_s.upcase}"
+  end
+
+  def eval(input)
+    return if input.strip.empty?
+
+    args = input.split(/\s+/)
+    command = args.first.to_s.downcase.to_sym
+    arguments = args.last
+
+    raise ArgumentError, 'Invalid command' unless COMMANDS.include?(command)
+
+    case command
+    when :place
+      raise ArgumentError, 'Invalid command' if arguments.nil?
+
+      tokens = arguments.split(/,/)
+
+      raise ArgumentError, 'Invalid command' unless tokens.count > 2
+
+      x = tokens[0].to_i
+      y = tokens[1].to_i
+      direction = tokens[2].downcase.to_sym
+
+      place(x, y, direction)
+    when :move
+      move
+    when :left
+      rotate_left
+    when :right
+      rotate_right
+    when :report
+      report
+    else
+      raise ArgumentError, 'Invalid command'
+    end
+
   end
 
   private

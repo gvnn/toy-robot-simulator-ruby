@@ -8,6 +8,12 @@ class Simulator
     @robot = ToyRobot.new @board
   end
 
-  COMMANDS = [:place, :move, :left, :right, :report]
+  def execute(command)
+    begin
+      puts @robot.eval(command)
+    rescue Exception => e
+      puts e.message
+    end
+  end
 
 end

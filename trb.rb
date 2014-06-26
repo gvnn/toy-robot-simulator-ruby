@@ -9,7 +9,7 @@ command = STDIN.gets
 
 while command
   command.strip!
-  if command == "EXIT"
+  if command.downcase == "exit"
     puts "# Bye"
     exit
   else

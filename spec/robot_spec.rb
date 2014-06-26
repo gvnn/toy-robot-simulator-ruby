@@ -74,4 +74,44 @@ describe ToyRobot do
     expect(@robot.move).to eq(false)
   end
 
+  it 'should report its position' do
+    @robot.place(5, 5, :east)
+    expect(@robot.report).to eq("5,5,EAST")
+    @robot.move #this is going outside. Command is ignored and the report is the same as before
+    expect(@robot.report).to eq("5,5,EAST")
+    @robot.rotate_right
+    @robot.move
+    expect(@robot.report).to eq("5,4,SOUTH")
+  end
+
+  it 'should eval commands' do
+    @robot.eval("PLACE 0,0,NORTH")
+    expect(@robot.report).to eq("0,0,NORTH")
+
+    @robot.eval("MOVE")
+    @robot.eval("RIGHT")
+    @robot.eval("MOVE")
+
+    expect(@robot.report).to eq("1,1,EAST")
+
+    # if it goes out of the board it ignores the command
+    for i in 0..10
+      @robot.eval("MOVE");
+    end
+    expect(@robot.report).to eq("5,1,EAST")
+
+    # rotate on itself
+    for i in 0..3
+      @robot.eval("LEFT");
+    end
+    expect(@robot.report).to eq("5,1,EAST")
+
+  end
+
+  it 'should ignore invalid commands' do
+    expect { @robot.eval("PLACE12NORTH") }.to raise_error(ArgumentError)
+    expect { @robot.eval("LEFFT") }.to raise_error(ArgumentError)
+    expect { @robot.eval("RIGHTT") }.to raise_error(ArgumentError)
+  end
+
 end
